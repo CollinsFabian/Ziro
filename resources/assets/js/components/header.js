@@ -1,9 +1,10 @@
-import { loadTemplate, renderTemplate } from "../template.js";
-import { dom } from "../dom.js";
+import { loadTemplate, renderTemplate } from "../core/template.js";
+import { dom } from "../core/dom.js";
+import { appName, assetUrl } from "../core/runtime.js";
 
-const headerTemplatePath = '/assets/templates/components/header.html';
+const headerTemplatePath = assetUrl('templates/components/header.html');
 
-export async function renderHeader(title = 'Ziro') {
+export async function renderHeader(title = appName()) {
     const template = await loadTemplate(headerTemplatePath);
     return renderTemplate(template, { title });
 }

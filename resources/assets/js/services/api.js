@@ -1,3 +1,5 @@
+import { apiBaseUrl } from "../core/runtime.js";
+
 /**
  * Shared HTTP client for local modules.
  * Prefer the shared `api` instance for requests.
@@ -180,7 +182,7 @@ class ApiClient {
 }
 
 const api = new ApiClient({
-    baseUrl: "/api/v1",
+    baseUrl: apiBaseUrl(),
 });
 const asyncFetch = api.request.bind(api);
 const gatedFetch = api.gatedRequest.bind(api);

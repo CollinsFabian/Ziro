@@ -1,3 +1,5 @@
+import { appName, isDevelopmentEnv } from "./runtime.js";
+
 /**
  * Local DOM helper used across page modules.
  * Prefer `dom` for new code, while legacy named exports remain available.
@@ -135,8 +137,8 @@ class DomUtils {
     }
 
     setDocTitle(pageTitle) {
-        const appName = 'Ziro';
-        document.title = pageTitle ? `${pageTitle}` : appName;
+        const name = appName();
+        document.title = pageTitle ? `${pageTitle}` : name;
     }
 
     /**
@@ -157,8 +159,7 @@ class DomUtils {
      * @returns {void}
      */
     silenceConsoleInProduction() {
-        const config = window.ZIRO_CONF || {};
-        if (!config.ENV || config.ENV !== "local") {
+        if (!isDevelopmentEnv()) {
             console.log = () => { };
             console.debug = () => { };
         }

@@ -55,6 +55,35 @@ class Request
         return $default;
     }
 
+    public function isApiRequest(): bool
+    {
+        return str_starts_with($this->uri, '/api/');
+    }
+
+    public function expectsJson(): bool
+    {
+        if ($this->isApiRequest()) {
+            return true;
+        }
+
+        $accept = strtolower((string) $this->header('Accept', ''));
+        if (str_contains($accept, 'application/json')) {
+            return true;
+        }
+
+        return strtolower((string) $this->header('X-Requested-With', '')) === 'xmlhttprequest';
+    }
+
+    public function origin(): ?string
+    {
+        $origin = $this->header('Origin');
+        if (!is_string($origin) || trim($origin) === '') {
+            return null;
+        }
+
+        return trim($origin);
+    }
+
     protected static function captureHeaders(): array
     {
         if (function_exists('getallheaders')) {

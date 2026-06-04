@@ -32,9 +32,10 @@
         <div class="hero-panel">
             <div class="code-block">
                 <div class="code-header">api.php</div>
-                <pre><code class="language-php">$router->post('/api/v1/login', [AuthController::class, 'login']);
-$router->get('/api/v1/user', [UserController::class, 'profile']);</code>
-                </pre>
+                <pre><code class="language-php">
+                    $router->post('/api/v1/login', [AuthController::class, 'login']);
+                    $router->get('/api/v1/user', [UserController::class, 'profile']);
+                </code></pre>
             </div>
             <div class="route-card">
                 <span>Frontend</span>
@@ -53,15 +54,18 @@ $router->get('/api/v1/user', [UserController::class, 'profile']);</code>
     <div class="grid">
         <article class="card">
             <h3>Backend stays backend</h3>
-            <p>Your PHP code handles auth, data, policies, and business logic instead of trying to also be a page rendering layer.</p>
+            <p>Your PHP code handles auth, data, policies, and business logic instead of trying to also be a page
+                rendering layer.</p>
         </article>
         <article class="card">
             <h3>Future mobile support is easier</h3>
-            <p>When the API is already the contract, adding a mobile client later feels like an extension, not a rewrite.</p>
+            <p>When the API is already the contract, adding a mobile client later feels like an extension, not a
+                rewrite.</p>
         </article>
         <article class="card">
             <h3>Small enough to understand</h3>
-            <p>No giant maze of conventions. Just routes, middleware, services, templates, and a frontend entry you can trace quickly.</p>
+            <p>No giant maze of conventions. Just routes, middleware, services, templates, and a frontend entry you can
+                trace quickly.</p>
         </article>
         <article class="card">
             <h3>Static frontend delivery</h3>
@@ -87,13 +91,15 @@ $router->get('/api/v1/user', [UserController::class, 'profile']);</code>
         <div class="code-block">
             <div class="code-header">Frontend routes</div>
             <pre><code class="language-js">router.get('/', async () => mountLandingPage());
-router.get('/login', async () => mountLoginPage());
-router.get('/dashboard', async () => mountDashboardPage());</code></pre>
+                router.get('/login', async () => mountLoginPage());
+                router.get('/dashboard', async () => mountDashboardPage());
+            </code></pre>
         </div>
         <div class="code-block">
             <div class="code-header">Serve locally</div>
             <pre><code class="language-bash">zi serve
-zi build:assets --dev</code></pre>
+                zi build:assets --dev
+            </code></pre>
         </div>
     </div>
 </section>

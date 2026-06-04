@@ -10,6 +10,8 @@ use Ziro\Middleware\Auth\SessionAuth;
 use Ziro\Middleware\CorsMiddleware;
 use Ziro\Middleware\JsonOnly;
 use Ziro\Middleware\RateLimit;
+use Ziro\Middleware\SecurityHeaders;
+use Ziro\Controllers\Web\SpaController;
 use Ziro\System\Http\Request;
 use Ziro\System\Http\Response;
 use Ziro\System\Middleware\Pipeline;
@@ -29,6 +31,7 @@ class Kernel
     ];
     protected array $globalMiddleware = [
         CorsMiddleware::class,
+        SecurityHeaders::class,
     ];
 
     public function __construct($container = null)
@@ -60,49 +63,50 @@ class Kernel
     public function registerRoutes(): void
     {
         $router = $this->router; // DI
-        $routesPath = base_path('routes/api.php');
+        $routeFiles = [
+            base_path('bootstrap/routes/web.php'),
+            base_path('bootstrap/routes/api.php'),
+        ];
 
-        if (!file_exists($routesPath)) {
-            throw new \RuntimeException('Route file not found: ' . $routesPath);
+        foreach ($routeFiles as $routesPath) {
+            if (!file_exists($routesPath)) {
+                throw new \RuntimeException('Route file not found: ' . $routesPath);
+            }
+
+            require $routesPath;
         }
-
-        require $routesPath;
     }
 
     public function handle(Request $request): Response
     {
         $route = $this->router->match($request);
-        if (!$route && $request->method === 'OPTIONS') {
-            return Response::json(['status' => 'ok'], 200, [
-                'Access-Control-Allow-Origin' => (string) config('APP_CORS_ALLOW_ORIGIN', '*'),
-                'Access-Control-Allow-Methods' => (string) config('APP_CORS_ALLOW_METHODS', 'GET, POST, PUT, PATCH, DELETE, OPTIONS'),
-                'Access-Control-Allow-Headers' => (string) config('APP_CORS_ALLOW_HEADERS', 'Content-Type, Authorization, X-Api-Key, X-Requested-With'),
-                'Access-Control-Allow-Credentials' => (string) config('APP_CORS_ALLOW_CREDENTIALS', 'true'),
-            ]);
-        }
-
-        if (!$route) {
-            return Response::json(['status' => 'error', 'message' => 'Route not found'], 404);
-        }
 
         $middlewares = [];
         foreach ($this->globalMiddleware as $middleware) {
             $middlewares[] = $middleware;
         }
 
-        foreach ($route['middleware'] as $m) {
-            if (!isset($this->routeMiddleware[$m])) {
-                throw new \RuntimeException("Route middleware [$m] is not registered.");
-            }
+        if ($route) {
+            foreach ($route['middleware'] as $m) {
+                if (!isset($this->routeMiddleware[$m])) {
+                    throw new \RuntimeException("Route middleware [$m] is not registered.");
+                }
 
-            $middlewares[] = $this->routeMiddleware[$m];
+                $middlewares[] = $this->routeMiddleware[$m];
+            }
         }
 
         $pipeline = new Pipeline($this->container);
         $result = $pipeline
             ->send($request)
             ->through($middlewares)
-            ->then(fn($req) => $this->router->executeRoute($route, $req));
+            ->then(function ($req) use ($route) {
+                if (!$route) {
+                    return $this->handleMissingRoute($req);
+                }
+
+                return $this->router->executeRoute($route, $req);
+            });
 
         if ($result instanceof Response) {
             return $result;
@@ -113,5 +117,20 @@ class Kernel
         }
 
         return new Response((string) $result);
+    }
+
+    protected function handleMissingRoute(Request $request): Response
+    {
+        if ($request->method === 'OPTIONS' && $request->isApiRequest()) {
+            return new Response('', 204);
+        }
+
+        if ($request->expectsJson()) {
+            return Response::json(['status' => 'error', 'message' => 'Route not found'], 404);
+        }
+
+        /** @var SpaController $controller */
+        $controller = $this->container->make(SpaController::class);
+        return $controller->shell($request);
     }
 }

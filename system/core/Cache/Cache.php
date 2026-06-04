@@ -18,7 +18,7 @@ class Cache
     }
 
     /**
-     * Remove an item from the cache.
+     * Get an item from the cache.
      */
     public function get(string $key, mixed $default = null)
     {
@@ -39,7 +39,7 @@ class Cache
     }
 
     /**
-     * Retrieve an item from the cache.
+     * Add an item to the cache.
      */
     public function set(string $key, mixed $value, int $ttl = 3600): bool
     {
@@ -55,7 +55,7 @@ class Cache
     }
 
     /**
-     * Store an item in the cache.
+     * Delete an item in the cache.
      */
     public function delete(string $key): bool
     {

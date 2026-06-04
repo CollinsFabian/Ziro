@@ -1,10 +1,10 @@
-import { ApiClient } from "../api.js";
+import { api } from "../services/api.js";
 import { renderFooter } from "../components/footer.js";
-import { loadTemplate, renderTemplate } from "../template.js";
-import { dom } from "../dom.js";
-const api = new ApiClient();
+import { loadTemplate, renderTemplate } from "../core/template.js";
+import { dom } from "../core/dom.js";
+import { assetUrl } from "../core/runtime.js";
 
-const loginTemplatePath = '/assets/templates/pages/login.html';
+const loginTemplatePath = assetUrl('templates/pages/login.html');
 
 async function renderLoginPage(header = 'Login to your account') {
     const [loginTemplate, footer] = await Promise.all([
@@ -47,9 +47,7 @@ export async function mountLoginPage() {
         status.textContent = 'Logging in...';
 
         try {
-            const response = await api.post('/api/v1/login', {
-                body: { email, password }
-            });
+            const response = await api.post('/login', { email, password });
 
             status.textContent = response.message ?? 'Login request completed.';
         } catch (error) {

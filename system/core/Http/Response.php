@@ -26,6 +26,15 @@ class Response
         );
     }
 
+    public static function html(string $content, int $status = 200, array $headers = []): self
+    {
+        return new self(
+            $content,
+            $status,
+            array_merge(['Content-Type' => 'text/html; charset=UTF-8'], $headers)
+        );
+    }
+
     public static function redirect(string $url, $status = 302): static
     {
         return new static('', (int) $status, ['Location' => $url]);

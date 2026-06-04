@@ -1,13 +1,14 @@
 import { bindHeaderInteractions, renderHeader } from '../components/header.js';
 import { renderFooter } from '../components/footer.js';
-import { loadTemplate } from '../template.js';
-import { dom } from "../dom.js";
+import { loadTemplate } from '../core/template.js';
+import { dom } from "../core/dom.js";
+import { appName, assetUrl } from "../core/runtime.js";
 
-const landingTemplatePath = '/assets/templates/pages/landing.html';
+const landingTemplatePath = assetUrl('templates/pages/landing.html');
 
 async function renderLandingShell() {
     const [header, landingPage, footer] = await Promise.all([
-        renderHeader('Ziro'),
+        renderHeader(appName()),
         loadTemplate(landingTemplatePath),
         renderFooter(),
     ]);

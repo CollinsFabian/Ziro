@@ -21,17 +21,5 @@ if ($isPublicFile) {
     return false;
 }
 
-if (str_starts_with($path, '/api/')) {
-    require $publicPath . DIRECTORY_SEPARATOR . 'index.php';
-    return true;
-}
-
-$indexPath = $publicPath . DIRECTORY_SEPARATOR . 'index.html';
-if (is_file($indexPath)) {
-    readfile($indexPath);
-    return true;
-}
-
-http_response_code(404);
-echo 'Front controller not found';
+require $publicPath . DIRECTORY_SEPARATOR . 'index.php';
 return true;

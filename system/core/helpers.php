@@ -30,3 +30,23 @@ function config(string $key, mixed $default = null): mixed
     return \Ziro\System\Config\Config::get($key, $default);
 }
 
+function asset_path(string $logicalPath): string
+{
+    return \Ziro\System\Assets\AssetManager::path($logicalPath);
+}
+
+function asset_url(string $logicalPath): string
+{
+    return \Ziro\System\Assets\AssetManager::url($logicalPath);
+}
+
+function asset_manifest(): array
+{
+    return \Ziro\System\Assets\AssetManager::manifest();
+}
+
+function frontend_runtime_config(): array
+{
+    return \Ziro\System\Assets\AssetManager::runtimeConfig();
+}
+

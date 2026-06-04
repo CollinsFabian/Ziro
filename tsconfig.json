@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["resources/assets/js/*"],
+      "@assets/*": ["resources/assets/*"],
+      "@styles/*": ["resources/assets/css/*"],
+      "@templates/*": ["resources/assets/templates/*"],
+      "@images/*": ["resources/assets/images/*"],
+      "@fonts/*": ["resources/assets/fonts/*"]
+    },
+    "allowJs": true,
+    "checkJs": false,
+    "strict": false,
+    "noEmit": true,
+    "lib": ["DOM", "ES2020"]
+  },
+  "include": ["resources/assets/js/**/*"]
+}

@@ -5,7 +5,8 @@
     "build": "node system/tools/builder/build.js",
     "build:prod": "node system/tools/builder/build.js --prod",
     "dev": "node system/tools/builder/dev.js",
-    "structure:validate": "zi structure:validate"
+    "structure:validate": "zi structure:validate",
+    "typecheck:frontend": "node system/tools/builder/node_modules/typescript/bin/tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
     "ws": "^8.20.0"

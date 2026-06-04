@@ -1,13 +1,14 @@
 import { bindHeaderInteractions, renderHeader } from "../components/header.js";
 import { renderFooter } from "../components/footer.js";
-import { loadTemplate } from "../template.js";
-import { dom } from "../dom.js";
+import { loadTemplate } from "../core/template.js";
+import { dom } from "../core/dom.js";
+import { appName, assetUrl } from "../core/runtime.js";
 
-const notFoundTemplatePath = '/assets/templates/pages/not-found.html';
+const notFoundTemplatePath = assetUrl('templates/pages/not-found.html');
 
 async function renderNotFoundShell() {
     const [header, page, footer] = await Promise.all([
-        renderHeader('Ziro'),
+        renderHeader(appName()),
         loadTemplate(notFoundTemplatePath),
         renderFooter(),
     ]);

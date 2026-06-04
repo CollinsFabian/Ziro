@@ -1,13 +1,14 @@
 import { bindHeaderInteractions, renderHeader } from "../components/header.js";
 import { renderFooter } from "../components/footer.js";
-import { loadTemplate } from "../template.js";
-import { dom } from "../dom.js";
+import { loadTemplate } from "../core/template.js";
+import { dom } from "../core/dom.js";
+import { appName, assetUrl } from "../core/runtime.js";
 
-const dashboardTemplatePath = '/assets/templates/pages/dashboard.html';
+const dashboardTemplatePath = assetUrl('templates/pages/dashboard.html');
 
 async function renderDashboardShell() {
     const [header, dashboardPage, footer] = await Promise.all([
-        renderHeader('Ziro'),
+        renderHeader(appName()),
         loadTemplate(dashboardTemplatePath),
         renderFooter(),
     ]);
